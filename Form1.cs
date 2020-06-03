@@ -17,7 +17,7 @@ namespace AplikacjaFizycznaElektrostatyka
         Point[] punkty_niebieskie = new Point[2];
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();      
 
         }
         private void panel4_MouseMove(object sender, MouseEventArgs e)
@@ -87,12 +87,19 @@ namespace AplikacjaFizycznaElektrostatyka
 
         Point point1, point2, point1a, point2a;
 
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+          MessageBox.Show("Dzięki niemu nauczysz sie jak działają na siebie ładunki dodatnie, ujemne.\n\n Gdy między ładunkami pojawia się CZERWONA kreska oznacza ona, że ładunki dodatnie odpychają się od siebie. \n Gdy między ładunkami pojawia się NIEBIESKA kreska oznacza ona, że ładunki ujemne odpychają się od siebie. \n Gdy między ładunkami pojawia się CZARNA kreska oznacza ona, że ładunki Przyciągają się do siebie.\n\n UWAGA! \n Jeśli nie pojawi się pole wokół ładunku oznacza to ze trzeba rozstawić szerzej ładunki. ", "Witam w programie!", MessageBoxButtons.OK);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             k = 0; n = 0;
             Array.Clear(punkty_czerwone, 0, k);
             Array.Clear(punkty_niebieskie, 0, n);
             g.Clear(Color.White);
+            p.Dispose();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -105,6 +112,7 @@ namespace AplikacjaFizycznaElektrostatyka
 
             if (k == 2 && n == 2)
             {
+
                 for (int i = 0; i < k; i++)
                 {
                     point1 = punkty_czerwone[i]; i++;
@@ -124,9 +132,51 @@ namespace AplikacjaFizycznaElektrostatyka
 
                         g.DrawLine(blackPen, point2a, point1);
                         g.DrawLine(blackPen, point2a, point1a);
+                        //czesc opdowiedzialna za pole 
+                        int dlugosc1 = (int)Math.Sqrt(Math.Pow((point1.X - point2.X), 2) + Math.Pow((point1.Y - point2.Y), 2));
+                        int dlugosca = (int)Math.Sqrt(Math.Pow((point1.X - point2a.X), 2) + Math.Pow((point1.Y - point2a.Y), 2));
+                        int dlugosc11 = (int)Math.Sqrt(Math.Pow((point1a.X - point2.X), 2) + Math.Pow((point1a.Y - point2.Y), 2));
+                        int dlugoscaa = (int)Math.Sqrt(Math.Pow((point1a.X - point2a.X), 2) + Math.Pow((point1a.Y - point2a.Y), 2));
+
+                        double polowa1 = dlugosc1 / 2;
+                        double polowaa = dlugosca / 2;
+                        double polowa11 = dlugosc11 / 2;
+                        double polowaaa = dlugoscaa / 2;
+
+                        /*
+                        MessageBox.Show("punkty1: x=" + point1.X + "y=" +
+                            point1.Y + "\n punkt2: x= " + point2.X + "y=" + point2.Y +
+                            "\n punkt2a: x= " + point2a.X + "y=" + point2a.Y +
+                            "\npolowa1=" + polowa1 + "\npolowa=" + polowaa + "\npolowa11=" + polowa11 + "\npolowaaa=" + polowaaa);
+                        */
+                        //POLE
+                    
+                       // double polowa = (polowa1 + polowaa + polowa11 + polowaaa) /4;
+
+                        double[] x = { polowa1 , polowaa, polowa11, polowaaa };
+                       
+                        double polowa = x.Min();
+
+                        if (polowa <= 25 && polowa >= 24)
+                        {
+                            polowa += 5;
+                        }
+                        else
+                        {
+                            polowa += 1;
+                        }
+                        int jj = 0;
+                        for (int ii = 0; jj < polowa; ii += 10)
+                        {
+                            g.DrawEllipse(blackPen1, point1a.X - jj, point1a.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen1, point1.X - jj, point1.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen2, point2a.X - jj, point2a.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen2, point2.X - jj, point2.Y - jj, ii, ii);
+                            jj += 5;
+                        }
 
                     }
-
+                    
                 }
             }
             else if (n == 2 && k == 0)
@@ -137,7 +187,29 @@ namespace AplikacjaFizycznaElektrostatyka
                     point2a = punkty_niebieskie[j];
 
                     g.DrawLine(blackPen2, point2, point2a);
+                    //czesc opdowiedzialna za pole 
+                    int dlugosc1 = (int)Math.Sqrt(Math.Pow((point2.X - point2a.X), 2) + Math.Pow((point2.Y - point2a.Y), 2));
+                    double polowa1 = (dlugosc1 /2) +80;
+
+                    /*
+                    MessageBox.Show("\n punkt2: x= " + point2.X + "y=" + point2.Y +
+                        "\n punkt2a: x= " + point2a.X + "y=" + point2a.Y +
+                        "\npolowa1=" + polowa1);*/
+
+                    //POLE
+                    if (polowa1 < 10)
+                    {
+                        polowa1 += 10;
+                    }
+                    int jj = 0;
+                    for (int ii = 0; jj < polowa1; ii += 10)
+                    {
+                        g.DrawEllipse(blackPen2, point2a.X - jj, point2a.Y - jj, ii, ii);
+                        g.DrawEllipse(blackPen2, point2.X - jj, point2.Y - jj, ii, ii);
+                        jj += 5;
+                    }
                 }
+                
             }
             else if (n == 0 && k == 2)
             {
@@ -147,7 +219,31 @@ namespace AplikacjaFizycznaElektrostatyka
                     point2a = punkty_czerwone[i];
 
                     g.DrawLine(blackPen1, point2, point2a);
+                    
+                    //czesc opdowiedzialna za pole 
+                    int dlugosc1 = (int)Math.Sqrt(Math.Pow((point2.X - point2a.X), 2) + Math.Pow((point2.Y - point2a.Y), 2));
+                    double polowa1 = (dlugosc1 / 2 )+ 80;
+
+                    /*
+                    MessageBox.Show("\n punkt2: x= " + point2.X + "y=" + point2.Y +
+                        "\n punkt2a: x= " + point2a.X + "y=" + point2a.Y +
+                        "\npolowa1=" + polowa1);*/
+
+                    //POLE
+
+                    if (polowa1 < 10)
+                    {
+                        polowa1 += 10;
+                    }               
+                    int jj = 0;
+                    for (int ii = 0; jj < polowa1; ii += 10)
+                    {
+                        g.DrawEllipse(blackPen1, point2a.X - jj, point2a.Y - jj, ii, ii);
+                        g.DrawEllipse(blackPen1, point2.X - jj, point2.Y - jj, ii, ii);
+                        jj += 5;
+                    }
                 }
+                
             }
             else if (k == 1 && n==2)
             {
@@ -165,7 +261,42 @@ namespace AplikacjaFizycznaElektrostatyka
                         g.DrawLine(blackPen2, point2, point2a);
 
                         g.DrawLine(blackPen, point2a, point1);
+                        
+                        //czesc opdowiedzialna za pole 
+                        int dlugosc1 = (int)Math.Sqrt(Math.Pow((point1.X - point2.X), 2) + Math.Pow((point1.Y - point2.Y), 2));
+                        int dlugosca = (int)Math.Sqrt(Math.Pow((point1.X - point2a.X), 2) + Math.Pow((point1.Y - point2a.Y), 2));
+                        double polowa1 = dlugosc1 / 2;
+                        double polowaa = dlugosca / 2;
+
+                        /*
+                        MessageBox.Show("punkty1: x=" + point1.X + "y=" +
+                            point1.Y + "\n punkt2: x= " + point2.X + "y=" + point2.Y +
+                            "\n punkt2a: x= " + point2a.X + "y=" + point2a.Y +
+                            "\npolowa1=" + polowa1 + "\npolowa=" + polowaa );*/
+
+                        //POLE
+                        double polowa;
+                        if (polowa1 < polowaa)
+                        {
+                            polowa = polowa1;
+                        }
+                        else
+                        {
+                            polowa = polowaa;
+                        }
+                        
+                        int jj = 0;
+                        for (int ii = 0; jj < polowa; ii += 10)
+                        {
+                            g.DrawEllipse(blackPen1, point1.X - jj, point1.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen2, point2a.X - jj, point2a.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen2, point2.X - jj, point2.Y - jj, ii, ii);
+                            jj += 5;
+                        }
                     }
+                    
+                    
+
                 }
             }
             else if (n == 1 && k == 2) 
@@ -184,7 +315,40 @@ namespace AplikacjaFizycznaElektrostatyka
                         g.DrawLine(blackPen1, point2, point2a);
 
                         g.DrawLine(blackPen, point2a, point1);
+                        
+                        //czesc opdowiedzialna za pole 
+                        int dlugosc1 = (int)Math.Sqrt(Math.Pow((point1.X - point2.X), 2) + Math.Pow((point1.Y - point2.Y), 2));
+                        int dlugosca = (int)Math.Sqrt(Math.Pow((point1.X - point2a.X), 2) + Math.Pow((point1.Y - point2a.Y), 2));
+                        double polowa1 = dlugosc1 / 2;
+                        double polowaa = dlugosca / 2;
+                        /*
+                        MessageBox.Show("punkty1: x=" + point1.X + "y=" + 
+                            point1.Y + "\n punkt2: x= " + point2.X + "y=" + point2.Y + 
+                            "\n punkt2a: x= " + point2a.X + "y="+ point2a.Y + 
+                            "\npolowa1="+ polowa1 + "\npolowa=" + polowaa);*/
+
+                        //POLE
+                        double polowa;
+                        if (polowa1 <  polowaa)
+                        {
+                            polowa = polowa1;
+                        }
+                        else
+                        {
+                            polowa = polowaa;
+                        }
+                        int jj = 0;
+                        for (int ii = 0; jj < polowa; ii += 10)
+                        {
+                            g.DrawEllipse(blackPen2, point1.X - jj, point1.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen1, point2a.X - jj, point2a.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen1, point2.X - jj, point2.Y - jj, ii, ii);
+                            jj += 5;
+                        }
+
                     }
+                    
+
                 }
             }
             else if (n == 1 && k == 1)
@@ -200,7 +364,27 @@ namespace AplikacjaFizycznaElektrostatyka
                         g.DrawLine(blackPen, point1, point2);
 
                         g.DrawLine(blackPen, point2, point1);
+
+                        //czesc opdowiedzialna za pole 
+                        int dlugosc = (int)Math.Sqrt(Math.Pow((point1.X - point2.X), 2) + Math.Pow((point1.Y - point2.Y), 2));
+                        double polowa = dlugosc / 2;
+                        //int srodekX = Math.Abs((point1.X + point2.X) / 2);
+                       // int srodekY = Math.Abs((point1.Y + point2.Y) / 2);
+                        //MessageBox.Show("punkty1: x=" + point1.X + "y=" + point1.Y + "\n punkt2: x= " + point2.X + "y=" + point2.Y + "\nsrodek x=" + srodekX + "y=" + srodekY + "\ndlugosc: " + dlugosc + " polowa: " + polowa);
+
+                        //POLE
+                        int jj = 0;
+                        for (int ii = 0; jj < polowa; ii += 10)
+                        {
+                            g.DrawEllipse(blackPen2, point1.X - jj, point1.Y - jj, ii, ii);
+                            g.DrawEllipse(blackPen1, point2.X - jj, point2.Y - jj, ii, ii);
+                            jj += 5;
+                        }
+
+                        //g.DrawEllipse(blackPen2, point1.X - 30, point1.Y - 30, 60, 60);
+
                     }
+                    
                 }
             }
 
@@ -216,7 +400,7 @@ namespace AplikacjaFizycznaElektrostatyka
             {
                 if (k < 2)
                 {
-                    g.DrawEllipse(p, cursor.X - 10, cursor.Y - 10, 20, 20);
+                    g.DrawEllipse(p, cursor.X -10, cursor.Y-10 , 20, 20);
                     punkty_czerwone[k++] = new Point(cursor.X, cursor.Y);
                 }
                 else
